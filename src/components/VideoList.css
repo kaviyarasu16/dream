@@ -1,0 +1,46 @@
+/* src/components/VideoList.css */
+.video-list-container {
+    padding: 20px; /* Add some padding */
+    background-color: #141414; /* Background color similar to Netflix */
+  }
+  
+  .available-movies-title {
+    color: #fff; /* White color for title */
+    text-align: center; /* Center the title */
+    margin-bottom: 20px; /* Space below the title */
+    font-size: 2rem; /* Font size for title */
+  }
+  
+  .video-grid {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap */
+    justify-content: center; /* Center the cards */
+  }
+  
+  .video-card {
+    width: 200px; /* Set the card width */
+    margin: 10px; /* Space between cards */
+    background-color: #333; /* Card background color */
+    border-radius: 10px; /* Rounded corners */
+    overflow: hidden; /* Clip overflowing content */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add a shadow */
+    transition: transform 0.3s; /* Animation for hover */
+  }
+  
+  .video-card:hover {
+    transform: scale(1.05); /* Scale effect on hover */
+  }
+  
+  .video-thumbnail {
+    width: 100%; /* Full width for the video player */
+    height: auto; /* Maintain aspect ratio */
+    border-bottom: 3px solid #007bff; /* Bottom border to separate title */
+  }
+  
+  .video-title {
+    color: #fff; /* White title color */
+    text-align: center; /* Center the title */
+    padding: 10px 0; /* Padding around the title */
+    font-size: 1rem; /* Font size for title */
+  }
+  

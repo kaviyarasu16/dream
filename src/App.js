@@ -1,20 +1,26 @@
 // src/App.js
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
 import VideoList from './components/VideoList';
 import VideoPlayer from './components/VideoPlayer';
 import Register from './components/Register';
+import VideoUploader from './components/VideoUploader';
+import { listVideoFiles } from './utils/s3ListObjects'; // Import the listVideoFiles function
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [videos] = useState([
-    { name: 'Video 1', url: '/videos/video1.mp4' },
-    { name: 'Video 2', url: '/videos/video2.mp4' },
-    { name: 'Video 3', url: '/videos/video3.mp4' },
-    { name: 'Video 4', url: '/videos/video4.mp4' },
-    { name: 'Video 5', url: '/videos/video5.mp4' },
-  ]);
+  const [videos, setVideos] = useState([]);
+
+  useEffect(() => {
+    // Fetch video files from S3 when the component mounts
+    const fetchVideos = async () => {
+      const videoFiles = await listVideoFiles();
+      setVideos(videoFiles);
+    };
+
+    fetchVideos();
+  }, []); // Empty dependency array to run this effect once on component mount
 
   const handleLogin = () => {
     setLoggedIn(true);
@@ -22,17 +28,6 @@ const App = () => {
 
   const handleLogout = () => {
     setLoggedIn(false);
-  };
-
-  const VideoListWithNavigation = () => {
-    const navigate = useNavigate();
-
-    const handleSelect = (video) => {
-      // Navigate to the video player route
-      navigate(`/video/${video.name}`);
-    };
-
-    return <VideoList videos={videos} onSelect={handleSelect} />;
   };
 
   return (
@@ -44,10 +39,13 @@ const App = () => {
             <Route path="/register" element={<Register />} />
           </Routes>
         ) : (
-          <Routes>
-            <Route path="/" element={<VideoListWithNavigation />} />
-            <Route path="/video/:name" element={<VideoPlayer videos={videos} />} />
-          </Routes>
+          <>
+            <Routes>
+              <Route path="/" element={<VideoList videos={videos} />} />
+              <Route path="/video/:name" element={<VideoPlayer videos={videos} />} />
+            </Routes>
+            <VideoUploader />
+          </>
         )}
       </div>
     </Router>

@@ -1,99 +1,34 @@
-import React, { useEffect, useState } from 'react';
+// src/components/VideoList.js
+import React from 'react';
+import PropTypes from 'prop-types';
+import { getVideoUrl } from '../utils/s3GetUrl';
+import './VideoList.css'; // Import the CSS file
 
-const VideoList = ({ videos, onSelect }) => {
-  const [thumbnails, setThumbnails] = useState(Array(videos.length).fill(null));
-  
-  const captureThumbnail = (videoUrl, index) => {
-    const video = document.createElement('video');
-    video.src = videoUrl;
-    video.currentTime = 1; // Capture a frame at 1 second
-
-    video.onloadeddata = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth / 2; // Reduce resolution
-      canvas.height = video.videoHeight / 2; // Reduce resolution
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const thumbnailUrl = canvas.toDataURL('image/jpeg');
-      setThumbnails((prev) => {
-        const newThumbnails = [...prev];
-        newThumbnails[index] = thumbnailUrl;
-        return newThumbnails;
-      });
-    };
-  };
-
-  useEffect(() => {
-    videos.forEach((video, index) => {
-      captureThumbnail(video.url, index);
-    });
-  }, [videos]);
-
+const VideoList = ({ videos }) => {
   return (
-    <div style={styles.videoListContainer}>
-      <h2 style={styles.heading}>Available Videos</h2>
-      <div style={styles.videoRow}>
-        {videos.map((video, index) => (
-          <div key={index} style={styles.videoCard} onClick={() => onSelect(video)}>
-            <div style={styles.thumbnail}>
-              <img
-                src={thumbnails[index] || `https://via.placeholder.com/150x100?text=${video.name}`}
-                alt={video.name}
-                style={styles.thumbnailImage}
-              />
+    <div className="video-list-container">
+      <h2 className="available-movies-title">Available Movies</h2>
+      {videos.length === 0 ? (
+        <p>No videos available</p>
+      ) : (
+        <div className="video-grid">
+          {videos.map((video, index) => (
+            <div key={index} className="video-card">
+              <video className="video-thumbnail" controls>
+                <source src={getVideoUrl(video)} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <h3 className="video-title">{video}</h3>
             </div>
-            <p style={styles.videoTitle}>{video.name}</p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
-const styles = {
-  videoListContainer: {
-    padding: '20px',
-    backgroundColor: '#141414',
-  },
-  heading: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: '2rem',
-    marginBottom: '20px',
-  },
-  videoRow: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-  },
-  videoCard: {
-    width: '200px',
-    margin: '10px',
-    textAlign: 'center',
-    backgroundColor: '#333',
-    padding: '10px',
-    borderRadius: '10px',
-    transition: 'transform 0.3s ease-in-out',
-  },
-  link: {
-    textDecoration: 'none',
-  },
-  thumbnail: {
-    width: '100%',
-    height: '150px',
-    overflow: 'hidden',
-    borderRadius: '10px',
-  },
-  thumbnailImage: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-  },
-  videoTitle: {
-    marginTop: '10px',
-    color: '#fff',
-    fontSize: '1rem',
-  }
+VideoList.propTypes = {
+  videos: PropTypes.array.isRequired,
 };
 
 export default VideoList;
