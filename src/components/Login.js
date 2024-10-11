@@ -1,17 +1,17 @@
 // src/components/Login.js
 import React, { useState } from 'react';
 
-const Login = ({ onLogin, onSwitchToRegister }) => {
+const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simple authentication check (you can enhance this)
-    if (username === 'user' && password === 'user') {
-      onLogin(true);
-      setError('');
+    if (username === 'admin' && password === 'admin') {
+      onLogin('admin'); // Call onLogin with 'admin' for admin login
+    } else if (username === 'user' && password === 'user') {
+      onLogin('user'); // Call onLogin with 'user' for regular user login
     } else {
       setError('Invalid credentials');
     }
@@ -41,9 +41,6 @@ const Login = ({ onLogin, onSwitchToRegister }) => {
           <button type="submit" style={styles.button}>Login</button>
         </form>
         {error && <p style={styles.error}>{error}</p>}
-        <button onClick={onSwitchToRegister} style={styles.button}>
-          Register
-        </button>
       </div>
     </div>
   );

@@ -12,7 +12,6 @@ AWS.config.update({
 const s3 = new AWS.S3();
 
 export const listVideoFiles = async () => {
-  console.log('Bucket Name:', awsConfig.bucket); // Check this log output
 
   const params = {
     Bucket: awsConfig.bucket,
@@ -21,7 +20,6 @@ export const listVideoFiles = async () => {
 
   try {
     const response = await s3.listObjectsV2(params).promise();
-    console.log('S3 Response:', response);
     return response.Contents.map((item) => item.Key);
   } catch (error) {
     console.error('Error listing video files from S3:', error);
