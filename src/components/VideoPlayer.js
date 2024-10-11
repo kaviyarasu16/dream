@@ -1,33 +1,43 @@
 // src/components/VideoPlayer.js
-import React, { useRef, useState } from 'react';
+import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
-const VideoPlayer = ({ videoSrc, onBack }) => {
-  const videoRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const handlePlayPause = () => {
-    if (isPlaying) {
-      videoRef.current.pause();
-    } else {
-      videoRef.current.play();
-    }
-    setIsPlaying(!isPlaying);
-  };
+const VideoPlayer = ({ videos }) => {
+  const { name } = useParams();
+  const video = videos.find((v) => v.name === name);
+  const navigate = useNavigate();
 
   return (
-    <div style={{ width: '100%', height: '50vh' }}>
-      <video ref={videoRef} width="100%" height="100%" controls>
-        <source src={videoSrc} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <div>
-        <button onClick={handlePlayPause}>
-          {isPlaying ? 'Pause' : 'Play'}
-        </button>
-        <button onClick={onBack}>Back</button>
-      </div>
+    <div style={styles.playerContainer}>
+      <button onClick={() => navigate(-1)} style={styles.backButton}>Back</button>
+      {video ? (
+        <div>
+          <h2>{video.name}</h2>
+          <video controls style={styles.videoPlayer}>
+            <source src={video.url} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      ) : (
+        <p>Video not found</p>
+      )}
     </div>
   );
+};
+
+const styles = {
+  playerContainer: {
+    padding: '20px',
+    textAlign: 'center',
+  },
+  videoPlayer: {
+    width: '50%', // Half the screen size
+  },
+  backButton: {
+    padding: '10px',
+    fontSize: '16px',
+    cursor: 'pointer',
+  },
 };
 
 export default VideoPlayer;

@@ -1,48 +1,52 @@
+
 // src/App.js
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
 import VideoList from './components/VideoList';
 import VideoPlayer from './components/VideoPlayer';
+import Register from './components/Register';
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [videos] = useState([
+    { name: 'Video 1', url: '/videos/video1.mp4' },
+    { name: 'Video 2', url: '/videos/video2.mp4' },
+    { name: 'Video 3', url: '/videos/video3.mp4' },
+    { name: 'Video 4', url: '/videos/video4.mp4' },
+    { name: 'Video 5', url: '/videos/video5.mp4' },
+  ]);
 
-  const videos = [
-    { name: 'Video 1', src: '/videos/video1.mp4' },
-    { name: 'Video 2', src: '/videos/video2.mp4' },
-    { name: 'Video 3', src: '/videos/video3.mp4' },
-    { name: 'Video 4', src: '/videos/video4.mp4' },
-    { name: 'Video 5', src: '/videos/video5.mp4' },
-  ];
-
-  const handleLogin = (authenticated) => {
-    setIsAuthenticated(authenticated);
+  const handleLogin = () => {
+    setLoggedIn(true);
   };
 
-  const handleSelectVideo = (video) => {
-    setSelectedVideo(video.src);
-  };
-
-  const handleBack = () => {
-    setSelectedVideo(null);
+  const handleLogout = () => {
+    setLoggedIn(false);
   };
 
   return (
-    <div className="App">
-      <h1>Video Player App</h1>
-      {!isAuthenticated ? (
-        <Login onLogin={handleLogin} />
-      ) : (
-        <>
-          {!selectedVideo ? (
-            <VideoList videos={videos} onSelect={handleSelectVideo} />
-          ) : (
-            <VideoPlayer videoSrc={selectedVideo} onBack={handleBack} />
-          )}
-        </>
-      )}
-    </div>
+    <Router>
+      <div className="App">
+        {!loggedIn ? (
+          <Routes>
+            <Route path="/" element={<Login onLogin={handleLogin} />} />
+            <Route path="/register" element={<Register />} />
+          </Routes>
+        ) : (
+          <Routes>
+            <Route
+              path="/"
+              element={<VideoList videos={videos} />}
+            />
+            <Route
+              path="/video/:name"
+              element={<VideoPlayer videos={videos} />}
+            />
+          </Routes>
+        )}
+      </div>
+    </Router>
   );
 };
 
