@@ -1,7 +1,6 @@
-
 // src/App.js
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import Login from './components/Login';
 import VideoList from './components/VideoList';
 import VideoPlayer from './components/VideoPlayer';
@@ -25,6 +24,17 @@ const App = () => {
     setLoggedIn(false);
   };
 
+  const VideoListWithNavigation = () => {
+    const navigate = useNavigate();
+
+    const handleSelect = (video) => {
+      // Navigate to the video player route
+      navigate(`/video/${video.name}`);
+    };
+
+    return <VideoList videos={videos} onSelect={handleSelect} />;
+  };
+
   return (
     <Router>
       <div className="App">
@@ -35,14 +45,8 @@ const App = () => {
           </Routes>
         ) : (
           <Routes>
-            <Route
-              path="/"
-              element={<VideoList videos={videos} />}
-            />
-            <Route
-              path="/video/:name"
-              element={<VideoPlayer videos={videos} />}
-            />
+            <Route path="/" element={<VideoListWithNavigation />} />
+            <Route path="/video/:name" element={<VideoPlayer videos={videos} />} />
           </Routes>
         )}
       </div>
