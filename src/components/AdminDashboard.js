@@ -35,7 +35,7 @@ const AdminDashboard = ({ onLogout }) => {
 
       {/* Video Uploader */}
       <div style={styles.section}>
-        <h2>Upload New Video</h2>
+        <h2>Upload New Videos</h2>
         <VideoUploader onVideoUpload={() => {
           // Refresh video list after upload
           const fetchVideos = async () => {
@@ -48,9 +48,9 @@ const AdminDashboard = ({ onLogout }) => {
 
       {/* Video List */}
       <div style={styles.section}>
-        <h2>Available Videos</h2>
+        <h2>Available Movies</h2>
         {videos.length === 0 ? (
-          <p>No videos available</p>
+          <p>No Movies available</p>
         ) : (
           <ul style={styles.videoList}>
             {videos.map((video, index) => (

@@ -1,57 +1,93 @@
-// src/components/Register.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-const Register = () => {
-  const [email, setEmail] = useState('');
+const Register = ({ onSwitchToLogin }) => {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const navigate = useNavigate();
+  const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      alert("Passwords don't match!");
-      return;
+    // Here, you would typically send the registration data to your backend
+    // For now, let's simulate a successful registration
+    if (username && password) {
+      alert('User registered successfully!'); // Replace with your registration logic
+      onSwitchToLogin(); // Switch to login after registration
+    } else {
+      setError('Please fill in all fields.');
     }
-    // Basic registration logic; here you can connect to a backend or store in localStorage
-    localStorage.setItem('registeredUser', JSON.stringify({ email, password }));
-    alert('Registration successful!');
-    navigate('/login'); // Redirect to login after successful registration
   };
 
   return (
-    <div className="register-container">
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
+    <div style={styles.container}>
+      <div style={styles.formContainer}>
+        <h2>Register</h2>
+        <form onSubmit={handleSubmit} style={styles.form}>
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            style={styles.input}
           />
-        </div>
-        <div>
-          <label>Password:</label>
           <input
             type="password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
+            style={styles.input}
           />
-        </div>
-        <div>
-          <label>Confirm Password:</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit">Register</button>
-      </form>
+          <button type="submit" style={styles.button}>Register</button>
+        </form>
+        {error && <p style={styles.error}>{error}</p>}
+        <button onClick={onSwitchToLogin} style={styles.button}>
+          Back to Login
+        </button>
+      </div>
     </div>
   );
+};
+
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    backgroundColor: '#f0f0f0',
+  },
+  formContainer: {
+    backgroundColor: '#fff',
+    padding: '40px',
+    borderRadius: '10px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    textAlign: 'center',
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  input: {
+    margin: '10px 0',
+    padding: '10px',
+    fontSize: '16px',
+    borderRadius: '5px',
+    border: '1px solid #ccc',
+  },
+  button: {
+    padding: '10px',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    marginTop: '10px',
+  },
+  error: {
+    color: 'red',
+    marginTop: '10px',
+  },
 };
 
 export default Register;

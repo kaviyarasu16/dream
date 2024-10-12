@@ -15,7 +15,7 @@ export const listVideoFiles = async () => {
 
   const params = {
     Bucket: awsConfig.bucket,
-    Prefix: '', // If your videos are in a folder, specify it here like 'videos/'
+    Prefix: '', 
   };
 
   try {
