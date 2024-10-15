@@ -31,6 +31,7 @@ const AdminDashboard = ({ onLogout }) => {
   return (
     <div style={styles.container}>
       <h1>Admin Dashboard</h1>
+      <h1>Welcome to your App, Admin!!</h1>
       <button onClick={onLogout} style={styles.logoutButton}>Logout</button>
 
       {/* Video Uploader */}
