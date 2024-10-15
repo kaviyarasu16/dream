@@ -1,12 +1,9 @@
-// src/components/VideoPlayer.js
 import React, { useRef, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { getVideoUrl } from '../utils/s3GetUrl'; // Ensure you have this utility function
 
-const VideoPlayer = () => {
-  const { name } = useParams();
+const VideoPlayer = ({ videoName, onClose }) => {
   const videoRef = useRef(null);
-  const videoUrl = getVideoUrl(name);
+  const videoUrl = getVideoUrl(videoName);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -30,7 +27,7 @@ const VideoPlayer = () => {
 
   return (
     <div style={styles.container}>
-      <h1>{name}</h1>
+      <h1>{videoName}</h1>
       <video
         ref={videoRef}
         controls
@@ -40,6 +37,9 @@ const VideoPlayer = () => {
         <source src={videoUrl} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
+      <button onClick={onClose} style={styles.closeButton}>
+        Close
+      </button>
       <button onClick={handleFullScreen} style={styles.fullscreenButton}>
         Full Screen
       </button>
@@ -55,11 +55,21 @@ const styles = {
     width: '100%',
     height: 'auto',
     maxHeight: '90vh', // Set maximum height for better UX
+    borderRadius: '10px', // Optional: rounded corners
   },
   fullscreenButton: {
     marginTop: '10px',
     padding: '10px 20px',
     backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+  },
+  closeButton: {
+    marginTop: '10px',
+    padding: '10px 20px',
+    backgroundColor: '#ff5e57',
     color: '#fff',
     border: 'none',
     borderRadius: '5px',

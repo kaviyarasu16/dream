@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
 import { Hub } from 'aws-amplify/utils';
@@ -7,7 +7,7 @@ const UserGroupCheck = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const checkUserGroup = async () => {
+  const checkUserGroup = useCallback(async () => {
     try {
       const session = await fetchAuthSession();
       if (!session?.tokens?.accessToken) {
@@ -29,7 +29,7 @@ const UserGroupCheck = () => {
     } finally {
       setLoading(false); // Stop the loading state
     }
-  };
+  }, [navigate]); // Add navigate to the dependency array
 
   useEffect(() => {
     const unsubscribe = Hub.listen('auth', async (data) => {
@@ -47,7 +47,7 @@ const UserGroupCheck = () => {
     checkUserGroup();
 
     return () => unsubscribe(); // Clean up the Hub listener
-  }, []); // Removed 'checkUserGroup' from dependency array
+  }, [checkUserGroup]); // Include checkUserGroup in the dependency array
 
   if (loading) {
     return <p>Loading...</p>; // You can show a loading spinner here
