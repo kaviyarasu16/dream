@@ -1,10 +1,21 @@
-// src/components/VideoList.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { getVideoUrl } from '../utils/s3GetUrl';
+import { listVideoFiles } from '../utils/s3ListObjects'; // Import the function to fetch video files
 import './VideoList.css'; // Import the CSS file
 
-const VideoList = ({ videos }) => {
+const VideoList = () => {
+  const [videos, setVideos] = useState([]);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      const videoFiles = await listVideoFiles();
+      setVideos(videoFiles); // Set the videos dynamically
+    };
+
+    fetchVideos(); // Fetch videos on component mount
+  }, []);
+
   return (
     <div className="video-list-container">
       <h2 className="available-movies-title">Available Movies</h2>
@@ -28,7 +39,7 @@ const VideoList = ({ videos }) => {
 };
 
 VideoList.propTypes = {
-  videos: PropTypes.array.isRequired,
+  videos: PropTypes.array,
 };
 
 export default VideoList;

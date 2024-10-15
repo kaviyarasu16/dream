@@ -1,41 +1,68 @@
 // src/components/VideoPlayer.js
-import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useRef, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { getVideoUrl } from '../utils/s3GetUrl'; // Ensure you have this utility function
 
-const VideoPlayer = ({ videos }) => {
+const VideoPlayer = () => {
   const { name } = useParams();
-  const video = videos.find((v) => v.name === name);
-  const navigate = useNavigate();
+  const videoRef = useRef(null);
+  const videoUrl = getVideoUrl(name);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+    }
+  }, [videoUrl]);
+
+  const handleFullScreen = () => {
+    if (videoRef.current) {
+      if (videoRef.current.requestFullscreen) {
+        videoRef.current.requestFullscreen();
+      } else if (videoRef.current.mozRequestFullScreen) { // Firefox
+        videoRef.current.mozRequestFullScreen();
+      } else if (videoRef.current.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+        videoRef.current.webkitRequestFullscreen();
+      } else if (videoRef.current.msRequestFullscreen) { // IE/Edge
+        videoRef.current.msRequestFullscreen();
+      }
+    }
+  };
 
   return (
-    <div style={styles.playerContainer}>
-      <button onClick={() => navigate(-1)} style={styles.backButton}>Back</button>
-      {video ? (
-        <div>
-          <h2>{video.name}</h2>
-          <video controls style={styles.videoPlayer}>
-            <source src={video.url} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      ) : (
-        <p>Video not found</p>
-      )}
+    <div style={styles.container}>
+      <h1>{name}</h1>
+      <video
+        ref={videoRef}
+        controls
+        style={styles.video}
+        onClick={handleFullScreen} // Click video to enter full screen
+      >
+        <source src={videoUrl} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <button onClick={handleFullScreen} style={styles.fullscreenButton}>
+        Full Screen
+      </button>
     </div>
   );
 };
 
 const styles = {
-  playerContainer: {
+  container: {
     padding: '20px',
-    textAlign: 'center',
   },
-  videoPlayer: {
-    width: '50%', // Half the screen size
+  video: {
+    width: '100%',
+    height: 'auto',
+    maxHeight: '90vh', // Set maximum height for better UX
   },
-  backButton: {
-    padding: '10px',
-    fontSize: '16px',
+  fullscreenButton: {
+    marginTop: '10px',
+    padding: '10px 20px',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
     cursor: 'pointer',
   },
 };
