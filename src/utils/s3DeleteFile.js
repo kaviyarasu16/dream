@@ -1,31 +1,28 @@
 // src/utils/s3DeleteFile.js
-import AWS from '../awsConfig'; // Import AWS from the new config file
 
-const secretsManager = new AWS.SecretsManager();
+import AWS from 'aws-sdk';
+import { getSecrets } from './getSecrets'; // Importing the getSecrets function
 
-const getSecrets = async () => {
-  const secretName = 'auth-cred'; // Your secret name
+export const deleteVideo = async (fileName) => {
   try {
-    const data = await secretsManager.getSecretValue({ SecretId: secretName }).promise();
-    return JSON.parse(data.SecretString);
+    const { AccessKey, SecretKey } = await getSecrets();
+
+    AWS.config.update({
+      accessKeyId: AccessKey,
+      secretAccessKey: SecretKey,
+      region: process.env.REGION,
+    });
+
+    const s3 = new AWS.S3();
+
+    const params = {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: fileName,
+    };
+
+    await s3.deleteObject(params).promise();
+    console.log(`Successfully deleted ${fileName}`);
   } catch (error) {
-    console.error('Error retrieving secrets:', error);
-    throw error;
+    console.error('Error deleting file from S3:', error);
   }
-};
-
-export const deleteVideo = async (videoName) => {
-  const awsConfig = await getSecrets();
-
-  const s3 = new AWS.S3({
-    accessKeyId: awsConfig.accessKeyId,
-    secretAccessKey: awsConfig.secretAccessKey,
-  });
-
-  const params = {
-    Bucket: awsConfig.bucket,
-    Key: videoName,
-  };
-
-  return s3.deleteObject(params).promise();
 };

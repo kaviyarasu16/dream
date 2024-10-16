@@ -1,32 +1,30 @@
 // src/utils/s3GetUrl.js
-import AWS from '../awsConfig'; // Import AWS from the new config file
 
-const secretsManager = new AWS.SecretsManager();
-
-const getSecrets = async () => {
-  const secretName = 'auth-cred'; // Your secret name
-  try {
-    const data = await secretsManager.getSecretValue({ SecretId: secretName }).promise();
-    return JSON.parse(data.SecretString);
-  } catch (error) {
-    console.error('Error retrieving secrets:', error);
-    throw error;
-  }
-};
+import AWS from 'aws-sdk';
+import { getSecrets } from './getSecrets'; // Importing the getSecrets function
 
 export const getVideoUrl = async (fileName) => {
-  const awsConfig = await getSecrets();
+  try {
+    const { AccessKey, SecretKey } = await getSecrets();
 
-  const s3 = new AWS.S3({
-    accessKeyId: awsConfig.accessKeyId,
-    secretAccessKey: awsConfig.secretAccessKey,
-  });
+    AWS.config.update({
+      accessKeyId: AccessKey,
+      secretAccessKey: SecretKey,
+      region: process.env.REGION,
+    });
 
-  const params = {
-    Bucket: awsConfig.bucket,
-    Key: fileName,
-    Expires: 60, // The URL will expire after 60 seconds
-  };
+    const s3 = new AWS.S3();
 
-  return s3.getSignedUrl('getObject', params);
+    const params = {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: fileName,
+      Expires: 60, // URL expiration time in seconds
+    };
+
+    const url = await s3.getSignedUrlPromise('getObject', params);
+    console.log(`Generated signed URL for ${fileName}:`, url);
+    return url;
+  } catch (error) {
+    console.error('Error generating signed URL:', error);
+  }
 };

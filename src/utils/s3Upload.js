@@ -1,34 +1,31 @@
 // src/utils/s3Upload.js
-import AWS from '../awsConfig'; // Import AWS from the new config file
 
-const secretsManager = new AWS.SecretsManager();
-
-const getSecrets = async () => {
-  const secretName = 'auth-cred'; // Your secret name
-  try {
-    const data = await secretsManager.getSecretValue({ SecretId: secretName }).promise();
-    return JSON.parse(data.SecretString);
-  } catch (error) {
-    console.error('Error retrieving secrets:', error);
-    throw error;
-  }
-};
+import AWS from 'aws-sdk';
+import { getSecrets } from './getSecrets'; // Importing the getSecrets function
 
 export const uploadVideo = async (file) => {
-  const awsConfig = await getSecrets();
+  try {
+    const { AccessKey, SecretKey } = await getSecrets();
 
-  const s3 = new AWS.S3({
-    accessKeyId: awsConfig.accessKeyId,
-    secretAccessKey: awsConfig.secretAccessKey,
-  });
+    AWS.config.update({
+      accessKeyId: AccessKey,
+      secretAccessKey: SecretKey,
+      region: process.env.REGION,
+    });
 
-  const params = {
-    Bucket: awsConfig.bucket,
-    Key: `${file.name}`,
-    Body: file,
-    ContentType: file.type,
-    // ACL: 'public-read', // adjust as needed
-  };
+    const s3 = new AWS.S3();
 
-  return s3.upload(params).promise();
+    const params = {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: file.name,
+      Body: file,
+      ContentType: file.type,
+    };
+
+    const data = await s3.upload(params).promise();
+    console.log(`Successfully uploaded ${file.name}:`, data.Location);
+    return data.Location;
+  } catch (error) {
+    console.error('Error uploading file to S3:', error);
+  }
 };

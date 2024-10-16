@@ -10,6 +10,8 @@ const AdminDashboard = ({ onLogout }) => {
   useEffect(() => {
     const fetchVideos = async () => {
       const videoFiles = await listVideoFiles();
+      console.log('AWS Region:', process.env.REGION);
+      console.log('S3 Bucket Name:', process.env.S3_BUCKET_NAME);
       setVideos(videoFiles);
     };
 
