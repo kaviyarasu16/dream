@@ -4,7 +4,8 @@ import AWS from 'aws-sdk';
 const secretsManager = new AWS.SecretsManager();
 
 const getSecrets = async () => {
-  const secretName = 'auth-cred'; // Replace with your secret name
+  const secretName = 'auth-cred'; // Your secret name
+  AWS.config.update({ region: 'ap-south-1' }); // Your AWS region
   try {
     const data = await secretsManager.getSecretValue({ SecretId: secretName }).promise();
     return JSON.parse(data.SecretString);
@@ -26,7 +27,7 @@ export const getVideoUrl = async (fileName) => {
   const params = {
     Bucket: awsConfig.bucket,
     Key: fileName,
-    Expires: 60 // The URL will expire after 60 seconds
+    Expires: 60, // The URL will expire after 60 seconds
   };
 
   return s3.getSignedUrl('getObject', params);
