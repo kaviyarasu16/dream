@@ -1,29 +1,42 @@
 // src/utils/s3ListObjects.js
 import AWS from 'aws-sdk';
-import { getSecrets } from './getSecrets';
+
+// Initialize the Secrets Manager client
+const secretsManager = new AWS.SecretsManager();
+
+// Function to get secrets
+const getSecrets = async () => {
+  const secretName = 'auth-cred'; // Replace with your secret name
+  try {
+    const data = await secretsManager.getSecretValue({ SecretId: secretName }).promise();
+    if ('SecretString' in data) {
+      return JSON.parse(data.SecretString);
+    } else {
+      // Handle binary secret (if needed)
+      const buff = Buffer.from(data.SecretBinary, 'base64');
+      return JSON.parse(buff.toString('utf-8'));
+    }
+  } catch (error) {
+    console.error('Error retrieving secrets:', error);
+    throw error; // Propagate error to the caller
+  }
+};
 
 export const listVideoFiles = async () => {
+  const awsConfig = await getSecrets(); // Fetch the AWS credentials from Secrets Manager
+
+  const s3 = new AWS.S3({
+    region: awsConfig.region,
+    accessKeyId: awsConfig.accessKeyId,
+    secretAccessKey: awsConfig.secretAccessKey,
+  });
+
+  const params = {
+    Bucket: awsConfig.bucket,
+    Prefix: '',
+  };
+
   try {
-    const { AccessKey, SecretKey } = await getSecrets();
-
-    // Configure AWS SDK with retrieved credentials
-    AWS.config.update({
-      accessKeyId: AccessKey,
-      secretAccessKey: SecretKey,
-      region: 'ap-south-1',
-    });
-
-    const s3 = new AWS.S3();
-    
-    // Log the bucket name and region
-    console.log('S3 Bucket Name:', process.env.S3_BUCKET_NAME);
-    console.log('AWS Region:', process.env.AWS_REGION);
-
-    const params = {
-      Bucket: process.env.S3_BUCKET_NAME,
-      Prefix: '',
-    };
-
     const response = await s3.listObjectsV2(params).promise();
     return response.Contents.map((item) => item.Key);
   } catch (error) {

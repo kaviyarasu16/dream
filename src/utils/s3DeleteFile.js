@@ -1,32 +1,32 @@
 // src/utils/s3DeleteFile.js
 import AWS from 'aws-sdk';
-import { getSecrets } from './getSecrets';
 
-export const deleteVideo = async (videoName) => {
+const secretsManager = new AWS.SecretsManager();
+
+const getSecrets = async () => {
+  const secretName = 'auth-cred'; // Replace with your secret name
   try {
-    const { AccessKey, SecretKey } = await getSecrets();
-
-    // Configure AWS SDK with retrieved credentials
-    AWS.config.update({
-      accessKeyId: AccessKey,
-      secretAccessKey: SecretKey,
-      region: 'ap-south-1',
-    });
-
-    const s3 = new AWS.S3();
-    
-    // Log the bucket name and region
-    console.log('S3 Bucket Name:', process.env.S3_BUCKET_NAME);
-    console.log('AWS Region:', process.env.AWS_REGION);
-
-    const params = {
-      Bucket: process.env.S3_BUCKET_NAME,
-      Key: videoName,
-    };
-
-    return s3.deleteObject(params).promise();
+    const data = await secretsManager.getSecretValue({ SecretId: secretName }).promise();
+    return JSON.parse(data.SecretString);
   } catch (error) {
-    console.error('Error deleting video:', error);
+    console.error('Error retrieving secrets:', error);
     throw error;
   }
+};
+
+export const deleteVideo = async (videoName) => {
+  const awsConfig = await getSecrets();
+
+  const s3 = new AWS.S3({
+    region: awsConfig.region,
+    accessKeyId: awsConfig.accessKeyId,
+    secretAccessKey: awsConfig.secretAccessKey,
+  });
+
+  const params = {
+    Bucket: awsConfig.bucket,
+    Key: videoName,
+  };
+
+  return s3.deleteObject(params).promise();
 };
