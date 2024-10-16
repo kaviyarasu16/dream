@@ -1,31 +1,32 @@
+// src/utils/s3DeleteFile.js
 import AWS from 'aws-sdk';
 import { getSecrets } from './getSecrets';
 
-// Fetch region and bucket name from environment variables
-const region = 'ap-south-1';
-const bucketName = process.env.Bucket_name;
-
-// Function to delete a video file from the S3 bucket
 export const deleteVideo = async (videoName) => {
   try {
-    const { AccessKey, SecretKey } = await getSecrets(); // Get credentials from Secrets Manager
+    const { AccessKey, SecretKey } = await getSecrets();
 
+    // Configure AWS SDK with retrieved credentials
     AWS.config.update({
-      region: region,
       accessKeyId: AccessKey,
       secretAccessKey: SecretKey,
+      region: process.env.AWS_REGION,
     });
 
     const s3 = new AWS.S3();
+    
+    // Log the bucket name and region
+    console.log('S3 Bucket Name:', process.env.S3_BUCKET_NAME);
+    console.log('AWS Region:', process.env.AWS_REGION);
 
     const params = {
-      Bucket: bucketName, // Use environment variable for bucket name
+      Bucket: process.env.S3_BUCKET_NAME,
       Key: videoName,
     };
 
     return s3.deleteObject(params).promise();
   } catch (error) {
-    console.error('Error deleting video from S3:', error);
+    console.error('Error deleting video:', error);
     throw error;
   }
 };
