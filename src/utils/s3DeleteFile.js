@@ -1,28 +1,31 @@
 import AWS from 'aws-sdk';
-import { secret } from '@aws-amplify/backend';
+import { getSecrets } from './getSecrets';
 
-// Access secrets and environment variables
-const accessKeyId = secret('AccessKey');
-const secretAccessKey = secret('SecretKey');
+// Fetch region and bucket name from environment variables
 const region = process.env.REGION;
 const bucketName = process.env.S3_BUCKET_NAME;
 
-// Configure AWS SDK
-AWS.config.update({
-  region: region,
-  accessKeyId: accessKeyId,
-  secretAccessKey: secretAccessKey,
-});
-
-// Create the S3 client
-const s3 = new AWS.S3();
-
 // Function to delete a video file from the S3 bucket
-export const deleteVideo = (videoName) => {
-  const params = {
-    Bucket: bucketName, // Use environment variable for bucket name
-    Key: videoName,
-  };
+export const deleteVideo = async (videoName) => {
+  try {
+    const { AccessKey, SecretKey } = await getSecrets(); // Get credentials from Secrets Manager
 
-  return s3.deleteObject(params).promise();
+    AWS.config.update({
+      region: region,
+      accessKeyId: AccessKey,
+      secretAccessKey: SecretKey,
+    });
+
+    const s3 = new AWS.S3();
+
+    const params = {
+      Bucket: bucketName, // Use environment variable for bucket name
+      Key: videoName,
+    };
+
+    return s3.deleteObject(params).promise();
+  } catch (error) {
+    console.error('Error deleting video from S3:', error);
+    throw error;
+  }
 };

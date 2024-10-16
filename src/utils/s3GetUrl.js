@@ -1,29 +1,32 @@
 import AWS from 'aws-sdk';
-import { secret } from '@aws-amplify/backend';
+import { getSecrets } from './getSecrets';
 
-// Access secrets and environment variables
-const accessKeyId = secret('AccessKey');
-const secretAccessKey = secret('SecretKey');
+// Fetch region and bucket name from environment variables
 const region = process.env.REGION;
 const bucketName = process.env.S3_BUCKET_NAME;
 
-// Configure AWS SDK
-AWS.config.update({
-  region: region,
-  accessKeyId: accessKeyId,
-  secretAccessKey: secretAccessKey,
-});
-
-// Create the S3 client
-const s3 = new AWS.S3();
-
 // Function to get a signed URL for a video file
-export const getVideoUrl = (fileName) => {
-  const params = {
-    Bucket: bucketName,
-    Key: fileName,
-    Expires: 60, // The URL will expire after 60 seconds
-  };
+export const getVideoUrl = async (fileName) => {
+  try {
+    const { AccessKey, SecretKey } = await getSecrets(); // Get credentials from Secrets Manager
 
-  return s3.getSignedUrl('getObject', params);
+    AWS.config.update({
+      region: region,
+      accessKeyId: AccessKey,
+      secretAccessKey: SecretKey,
+    });
+
+    const s3 = new AWS.S3();
+
+    const params = {
+      Bucket: bucketName,
+      Key: fileName,
+      Expires: 60, // The URL will expire after 60 seconds
+    };
+
+    return s3.getSignedUrl('getObject', params);
+  } catch (error) {
+    console.error('Error getting signed URL:', error);
+    throw error;
+  }
 };

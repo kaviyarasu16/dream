@@ -1,30 +1,28 @@
 import AWS from 'aws-sdk';
-import { secret } from '@aws-amplify/backend';
+import { getSecrets } from './getSecrets';
 
-// Access secrets and environment variables
-const accessKeyId = secret('AccessKey');
-const secretAccessKey = secret('SecretKey');
+// Fetch region and bucket name from environment variables
 const region = process.env.REGION;
 const bucketName = process.env.S3_BUCKET_NAME;
 
-// Configure AWS SDK
-AWS.config.update({
-  region: region,
-  accessKeyId: accessKeyId,
-  secretAccessKey: secretAccessKey,
-});
-
-// Create the S3 client
-const s3 = new AWS.S3();
-
 // Function to list all video files from the S3 bucket
 export const listVideoFiles = async () => {
-  const params = {
-    Bucket: bucketName,
-    Prefix: '', 
-  };
-
   try {
+    const { AccessKey, SecretKey } = await getSecrets(); // Get credentials from Secrets Manager
+
+    AWS.config.update({
+      region: region,
+      accessKeyId: AccessKey,
+      secretAccessKey: SecretKey,
+    });
+
+    const s3 = new AWS.S3();
+
+    const params = {
+      Bucket: bucketName, // Use environment variable for bucket name
+      Prefix: '', 
+    };
+
     const response = await s3.listObjectsV2(params).promise();
     return response.Contents.map((item) => item.Key);
   } catch (error) {
