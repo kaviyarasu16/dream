@@ -3,7 +3,7 @@ import AWS from 'aws-sdk';
 
 // Configure AWS SDK
 AWS.config.update({
-  region: process.env.REGION, // Use the environment variable
+  region: 'ap-south-1', // Use the environment variable
 });
 
 const secretsManager = new AWS.SecretsManager();

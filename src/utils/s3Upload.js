@@ -10,7 +10,7 @@ export const uploadVideo = async (file) => {
     AWS.config.update({
       accessKeyId: AccessKey,
       secretAccessKey: SecretKey,
-      region: process.env.AWS_REGION,
+      region: 'ap-south-1',
     });
 
     const s3 = new AWS.S3();
