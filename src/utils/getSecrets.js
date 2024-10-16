@@ -1,6 +1,9 @@
 // src/utils/getSecrets.js
 import AWS from 'aws-sdk';
 
+AWS.config.update({
+    region: process.env.Region, // Ensure you set the region from environment variable
+  });
 const secretsManager = new AWS.SecretsManager();
 
 export const getSecrets = async () => {
