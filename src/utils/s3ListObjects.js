@@ -2,8 +2,8 @@ import AWS from 'aws-sdk';
 import { getSecrets } from './getSecrets';
 
 // Fetch region and bucket name from environment variables
-const region = process.env.REGION;
-const bucketName = process.env.S3_BUCKET_NAME;
+const region = process.env.Region;
+const bucketName = process.env.Bucket_name;
 
 // Function to list all video files from the S3 bucket
 export const listVideoFiles = async () => {
