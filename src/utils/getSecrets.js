@@ -2,9 +2,17 @@
 import AWS from 'aws-sdk';
 
 AWS.config.update({
-    region: process.env.Region, // Ensure you set the region from environment variable
+    region: 'ap-south-1', // Ensure you set the region from environment variable
   });
 const secretsManager = new AWS.SecretsManager();
+
+// Fetch bucket name from environment variables
+const bucketName = process.env.Bucket_name;
+const region = process.env.Region; // Get the region from environment variable
+
+// Log region and bucket name
+console.log(`Region: ${region}`);
+console.log(`Bucket Name: ${bucketName}`);
 
 export const getSecrets = async () => {
   try {
