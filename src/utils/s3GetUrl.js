@@ -10,13 +10,13 @@ export const getVideoUrl = async (fileName) => {
     AWS.config.update({
       accessKeyId: AccessKey,
       secretAccessKey: SecretKey,
-      region: process.env.REGION,
+      region: process.env.REACT_APP_AWS_REGION,
     });
 
     const s3 = new AWS.S3();
 
     const params = {
-      Bucket: process.env.S3_BUCKET_NAME,
+      Bucket: process.env.REACT_APP_S3_BUCKET_NAME,
       Key: fileName,
       Expires: 60, // URL expiration time in seconds
     };

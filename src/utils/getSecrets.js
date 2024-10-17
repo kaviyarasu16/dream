@@ -4,7 +4,7 @@ import { SecretsManager } from 'aws-sdk';
 
 // Utility function to get secrets
 export const getSecrets = async () => {
-  const secretsManager = new SecretsManager({ region: process.env.REGION });
+  const secretsManager = new SecretsManager({ region: process.env.REACT_APP_AWS_REGION });
 
   try {
     const data = await secretsManager.getSecretValue({
