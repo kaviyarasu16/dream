@@ -9,10 +9,15 @@ const AdminDashboard = ({ onLogout }) => {
   // Fetch videos from S3 when the component mounts
   useEffect(() => {
     const fetchVideos = async () => {
-      const videoFiles = await listVideoFiles();
       console.log('AWS Region:', process.env.REGION);
       console.log('S3 Bucket Name:', process.env.S3_BUCKET_NAME);
-      setVideos(videoFiles);
+      try {
+        const videoFiles = await listVideoFiles();
+        setVideos(videoFiles || []); // Ensure videos is always an array
+      } catch (error) {
+        console.error('Error fetching video files:', error);
+        setVideos([]); // In case of error, set videos to an empty array
+      }
     };
 
     fetchVideos();
@@ -23,7 +28,7 @@ const AdminDashboard = ({ onLogout }) => {
       await deleteVideo(videoName);
       // Refresh video list after deletion
       const updatedVideos = await listVideoFiles();
-      setVideos(updatedVideos);
+      setVideos(updatedVideos || []); // Ensure videos is always an array
     } catch (error) {
       console.error('Error deleting video:', error);
     }
@@ -44,7 +49,7 @@ const AdminDashboard = ({ onLogout }) => {
           // Refresh video list after upload
           const fetchVideos = async () => {
             const videoFiles = await listVideoFiles();
-            setVideos(videoFiles);
+            setVideos(videoFiles || []);
           };
           fetchVideos();
         }} />
@@ -98,9 +103,6 @@ const styles = {
     cursor: 'pointer',
     transition: 'background-color 0.3s',
   },
-  logoutButtonHover: {
-    backgroundColor: '#e74c3c',
-  },
   section: {
     marginTop: '40px',
     backgroundColor: '#fff',
@@ -124,9 +126,6 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     transition: 'background-color 0.3s',
-  },
-  videoItemHover: {
-    backgroundColor: '#f9f9f9',
   },
   videoName: {
     flex: 1,

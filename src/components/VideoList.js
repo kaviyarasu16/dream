@@ -9,11 +9,21 @@ const VideoList = ({ onLogout }) => {
   const [videos, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null); // State for selected video
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [error, setError] = useState(null); // State for error handling
 
   useEffect(() => {
     const fetchVideos = async () => {
-      const videoFiles = await listVideoFiles();
-      setVideos(videoFiles); // Set the videos dynamically
+      try {
+        const videoFiles = await listVideoFiles();
+        if (Array.isArray(videoFiles)) {
+          setVideos(videoFiles); // Set the videos dynamically
+        } else {
+          throw new Error('Invalid video files response');
+        }
+      } catch (err) {
+        console.error('Error fetching videos:', err);
+        setError('Failed to load videos.');
+      }
     };
 
     fetchVideos(); // Fetch videos on component mount
@@ -36,7 +46,10 @@ const VideoList = ({ onLogout }) => {
       {/* Logout button */}
       <button onClick={onLogout} style={styles.logoutButton}>Logout</button>
 
-      {videos.length === 0 ? (
+      {/* Error or No Videos handling */}
+      {error ? (
+        <p>{error}</p>
+      ) : videos.length === 0 ? (
         <p>No videos available</p>
       ) : (
         <div className="video-grid">
