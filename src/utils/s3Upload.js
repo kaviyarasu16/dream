@@ -5,6 +5,8 @@ import AWS from 'aws-sdk';
 export const uploadVideo = async (file) => {
   try {
     const s3 = new AWS.S3({
+      accessKeyId: process.env.MY_ACCESS_KEY_ID,
+      secretAccessKey: process.env.MY_SECRET_ACCESS_KEY,
       region: process.env.REACT_APP_AWS_REGION, // Set region from the environment
     });
 
