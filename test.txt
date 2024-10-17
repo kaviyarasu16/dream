@@ -1,0 +1,259 @@
+addresses                                       
+asset_maintenance_records           
+asset_types                         
+assets                              
+audit_log                           
+authenticate_users                              
+brands_delete                       
+business_after_hours                            
+business_after_hours_contacts                   
+business_after_hours_contacts_emails            
+business_after_hours_contacts_phones            
+business_day_hours                              
+business_types                      
+client_brands                                   
+client_contact_types                
+client_contacts                                 
+client_priorities                   
+client_type                         
+client_types                        
+clients                                                        
+entities                            
+entity_client_relation              
+entity_tags                                                                      
+local_client_rates                  
+local_exclusions                                
+local_work_order_assessments        
+local_work_order_call_transcripts   
+local_work_order_escalation_types               
+local_work_order_escalations                    
+local_work_order_files              
+local_work_order_invites            
+local_work_order_job_trades         
+local_work_order_jobs               
+local_work_order_pins               
+local_work_order_sites                          
+local_work_order_tasks              
+local_work_order_trades             
+local_work_order_types                          
+local_work_order_visits             
+local_work_orders                               
+location_addresses                              
+location_assets                     
+location_types                      
+locations                           
+manufacturers                       
+nsp_entities                                                          
+priorities                                      
+priority_mapping                                     
+trade_mappings                      
+trade_option_lists                              
+trade_options                                   
+trade_rate_details                              
+trade_rates                                     
+trades                                                                       
+user_devices                                    
+user_role                           
+user_saved_for_later                            
+user_settings                                   
+user_uniform_entities                           
+user_uniform_preferences                        
+users                                           
+work_order_updates                  
+
+pg_dump -U postgres_dev -h postgres-dev-onengine.c9qmqiokiobn.us-east-1.rds.amazonaws.com -Fc -t public.addresses \
+    -t public.asset_maintenance_records \
+    -t public.asset_types \
+    -t public.assets \
+    -t public.client_brands \
+    -t public.client_contacts \
+    -t public.client_priorities \
+    -t public.client_type \
+    -t public.client_types \
+    -t public.clients \
+    -t public.interim_work_order_assignment \
+    -t public.interim_work_order_rejection \
+    -t public.interim_work_order_schedule_history \
+    -t public.interim_work_order_visits \
+    -t public.interim_work_orders \
+    -t public.local_client_rates \
+    -t public.local_work_order_assessments \
+    -t public.local_work_order_call_transcripts \
+    -t public.local_work_order_escalation_types \
+    -t public.local_work_order_escalations \
+    -t public.local_work_order_files \
+    -t public.local_work_order_invites \
+    -t public.local_work_order_job_trades \
+    -t public.local_work_order_jobs \
+    -t public.local_work_order_pins \
+    -t public.local_work_order_sites \
+    -t public.local_work_order_tasks \
+    -t public.local_work_order_trades \
+    -t public.local_work_order_types \
+    -t public.local_work_order_visits \
+    -t public.local_work_orders \
+    -t public.location_addresses \
+    -t public.location_assets \
+    -t public.location_types \
+    -t public.locations \
+    -t public.work_order_updates \
+    -f dev-table_dump.sql nsp-dev
+
+addresses                                       
+asset_types                                     _qa
+assets                                          _qa
+audit_log                                       _qa
+authenticate_users                              
+brands_delete                                   _qa
+business_after_hours                            
+business_after_hours_contacts                   
+business_after_hours_contacts_emails            
+business_after_hours_contacts_phones            
+business_day_hours                              
+business_types                                  _qa
+client_brands                                   
+client_contacts                                 
+client_priorities                               _qa
+client_rates_profile                            _qa
+client_types                                    _qa
+clients                                         
+communication_tracker                           
+compliance_resubmit_reasons                     
+contact_emails                                  
+contact_phones                                  
+data_validations                                
+databasechangelog                               
+databasechangeloglock                           
+dynamic_enum_types                              _qa
+dynamic_enum_values                             _qa
+entities                                        _qa
+entity_client_relation                          _qa
+entity_tags                                     
+equipment_options                               
+equipments                                      
+exclusion_types                                 
+existing_service_providers                      
+external_service_providers                      
+files                                           
+industry_types                                  _qa
+interim_service_provider_work_history           
+interim_service_providers_trades                
+interim_work_order_assignment                   
+interim_work_order_rejection                    
+interim_work_order_schedule_history             
+interim_work_order_visits                       
+interim_work_orders                             
+local_asset_maintenance_records                 _qa
+local_exclusions                                
+local_work_order_assessments                    _qa
+local_work_order_call_transcripts               _qa
+local_work_order_escalation_types               
+local_work_order_escalations                    
+local_work_order_files                          _qa
+local_work_order_invites                        _qa
+local_work_order_job_trades                     _qa
+local_work_order_jobs                           _qa
+local_work_order_pins                           _qa
+local_work_order_sites                          
+local_work_order_tasks                          _qa
+local_work_order_trades                         _qa
+local_work_order_types                          
+local_work_order_visits                         _qa
+local_work_orders                               
+location_addresses                              
+location_assets                                 _qa
+location_types                                  _qa
+locations                                       _qa
+manufacturers                                   _qa
+nsp_entities                                    
+option_lists                                    
+otp_codes                                       
+permission                                      _qa
+priorities                                      
+priority_mapping                                _qa
+profile_after_hours                             
+profile_business_administrative_contacts        
+profile_business_administrative_contacts_emails 
+profile_business_administrative_contacts_phones 
+profile_business_information                    
+profile_business_information_after_hours        
+profile_business_information_business_hours     
+profile_business_information_status_files       
+profile_certifications                          
+profile_day_hours                               
+profile_documents                               
+profile_documents_applicant_photos              
+profile_documents_compliance                    
+profile_documents_compliance_reasons            
+profile_documents_drivers_licenses              
+profile_documents_insurance                     
+profile_documents_insurance_files               
+profile_documents_trade_certifications          
+profile_documents_trade_certifications_files    
+profile_documents_trade_licenses                
+profile_documents_trade_licenses_files          
+profile_documents_vehicles                      
+profile_emails                                  
+profile_emergency_contacts                      
+profile_equipments                              
+profile_licenses                                
+profile_location_type                           _qa
+profile_payments                                
+profile_phones                                  
+profile_rates_and_coverages                     
+profile_signing_and_compliance                  
+profile_stage_progress                          
+profile_trade_accessories                       
+profile_trade_and_equipments                    
+profile_trade_applications                      
+profile_trade_capabilities                      
+profile_trade_certificate_preferred             
+profile_trade_certificate_required              
+profile_trade_connected_trades                  
+profile_trade_connected_trades_capabilities     
+profile_trade_equipment_location_type           _qa
+profile_trade_equipment_required                
+profile_trade_freon_types                       
+profile_trade_license_preferred                 
+profile_trade_license_required                  
+profile_trade_locations                         
+profile_trade_material_types                    
+profile_trade_project_sizes                     
+profile_trade_system_types                      
+profile_trades                                  
+profiles                                        
+profiles_after_hours                            
+profiles_work_hours                             
+rates_information                               
+role                                            _qa
+role_permission                                 _qa
+scheduled_tasks                                 
+service_provider_profile_status_stage           
+service_provider_reviews                        
+service_provider_summary                        _qa
+service_provider_types                          
+service_request_candidates                      
+service_requests                                
+sms_templates                                   
+spatial_ref_sys                                
+states                                          
+tags                                            
+trade_mappings                                  _qa
+trade_option_lists                              
+trade_options                                   
+trade_rate_details                              
+trade_rates                                     
+trades                                          
+uniforms                                        
+url_short_code                                  
+url_visit_history                               
+urlvisit_history                                
+user_devices                                    
+user_role                                       _qa
+user_saved_for_later                            
+user_settings                                   
+user_uniform_entities                           
+user_uniform_preferences                        
+users                                           
+work_order_updates                              _qa
+(157 rows)
