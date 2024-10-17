@@ -10,6 +10,10 @@ AWS.config.update({
 });
 
 const s3 = new AWS.S3();
+console.log('AWS Config:', awsConfig.region);
+console.log('AWS Config:', awsConfig.accessKeyId);
+console.log('AWS Config:', awsConfig.secretAccessKey);
+console.log('AWS Config:', awsConfig.bucket);
 
 export const getVideoUrl = (fileName) => {
   const params = {
