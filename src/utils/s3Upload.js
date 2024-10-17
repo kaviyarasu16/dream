@@ -1,25 +1,18 @@
 // src/utils/s3Upload.js
 
 import AWS from 'aws-sdk';
-import { getSecrets } from './getSecrets'; // Importing the getSecrets function
 
 export const uploadVideo = async (file) => {
   try {
-    const { AccessKey, SecretKey } = await getSecrets();
-
-    AWS.config.update({
-      accessKeyId: AccessKey,
-      secretAccessKey: SecretKey,
-      region: process.env.REACT_APP_AWS_REGION,
+    const s3 = new AWS.S3({
+      region: process.env.REACT_APP_AWS_REGION, // Set region from the environment
     });
 
-    const s3 = new AWS.S3();
-
     const params = {
-      Bucket: process.env.REACT_APP_S3_BUCKET_NAME,
-      Key: file.name,
-      Body: file,
-      ContentType: file.type,
+      Bucket: process.env.REACT_APP_S3_BUCKET_NAME, // S3 Bucket name from env
+      Key: file.name, // Use the file name as the S3 object key
+      Body: file, // The file to upload
+      ContentType: file.type, // MIME type of the file
     };
 
     const data = await s3.upload(params).promise();

@@ -1,22 +1,15 @@
 // src/utils/s3DeleteFile.js
 
 import AWS from 'aws-sdk';
-import { getSecrets } from './getSecrets'; // Importing the getSecrets function
 
 export const deleteVideo = async (fileName) => {
   try {
-    const { AccessKey, SecretKey } = await getSecrets();
-
-    AWS.config.update({
-      accessKeyId: AccessKey,
-      secretAccessKey: SecretKey,
-      region: process.env.REACT_APP_AWS_REGION,
+    const s3 = new AWS.S3({
+      region: process.env.REACT_APP_AWS_REGION, // Region is set from the environment
     });
 
-    const s3 = new AWS.S3();
-
     const params = {
-      Bucket: process.env.REACT_APP_S3_BUCKET_NAME,
+      Bucket: process.env.REACT_APP_S3_BUCKET_NAME, // Ensure the environment variable is set
       Key: fileName,
     };
 

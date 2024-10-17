@@ -1,22 +1,15 @@
 // src/utils/s3ListObjects.js
 
 import AWS from 'aws-sdk';
-import { getSecrets } from './getSecrets'; // Importing the getSecrets function
 
 export const listVideoFiles = async () => {
   try {
-    const { AccessKey, SecretKey } = await getSecrets();
-
-    AWS.config.update({
-      accessKeyId: AccessKey,
-      secretAccessKey: SecretKey,
-      region: process.env.REACT_APP_AWS_REGION,
+    const s3 = new AWS.S3({
+      region: process.env.REACT_APP_AWS_REGION, // Set region from the environment
     });
 
-    const s3 = new AWS.S3();
-
     const params = {
-      Bucket: process.env.REACT_APP_S3_BUCKET_NAME,
+      Bucket: process.env.REACT_APP_S3_BUCKET_NAME, // S3 Bucket name from env
     };
 
     const data = await s3.listObjectsV2(params).promise();

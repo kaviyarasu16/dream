@@ -9,8 +9,6 @@ const AdminDashboard = ({ onLogout }) => {
   // Fetch videos from S3 when the component mounts
   useEffect(() => {
     const fetchVideos = async () => {
-      console.log('AWS Region:', process.env.REACT_APP_AWS_REGION);
-      console.log('S3 Bucket Name:', process.env.REACT_APP_S3_BUCKET_NAME);
       try {
         const videoFiles = await listVideoFiles();
         setVideos(videoFiles || []); // Ensure videos is always an array
