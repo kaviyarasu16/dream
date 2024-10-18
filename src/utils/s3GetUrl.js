@@ -14,6 +14,7 @@ console.log('AWS Config:', awsConfig.region);
 console.log('AWS Config:', awsConfig.accessKeyId);
 console.log('AWS Config:', awsConfig.secretAccessKey);
 console.log('AWS Config:', awsConfig.bucket);
+console.log('AWS Config:', REACT_TEST);
 
 export const getVideoUrl = (fileName) => {
   const params = {
